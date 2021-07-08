@@ -2,6 +2,7 @@ package com.yiran.tacocloud.controllers;
 
 import com.yiran.tacocloud.models.Ingredient;
 import com.yiran.tacocloud.models.Ingredient.Type;
+import com.yiran.tacocloud.models.Taco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
