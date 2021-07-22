@@ -3,7 +3,9 @@ package com.yiran.tacocloud.controllers;
 import com.yiran.tacocloud.models.Ingredient;
 import com.yiran.tacocloud.models.Ingredient.Type;
 import com.yiran.tacocloud.models.Taco;
+import com.yiran.tacocloud.repository.IngredientRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,18 +23,17 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/design")
 public class DesignTacoController {
+    private final IngredientRepository ingredientRepo;
+
+    @Autowired
+    public DesignTacoController(IngredientRepository ingredientRepo) {
+        this.ingredientRepo = ingredientRepo;
+    }
 
     @GetMapping
     public String showDesignForm(Model model) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("APPL", "Apple", Type.SAUCE),
-                new Ingredient("MOMO", "MoMo", Type.WRAP),
-                new Ingredient("BING", "BingZi", Type.WRAP),
-                new Ingredient("BEEF", "Beef", Type.PROTEIN),
-                new Ingredient("PORK", "Pork", Type.PROTEIN),
-                new Ingredient("TUDOU", "patato", Type.VEGGIES),
-                new Ingredient("RUISHI", "Ruishi Nailao", Type.CHEESE)
-        );
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredientRepo.findAll().forEach(ingredients::add);
 
         Type[] types = Ingredient.Type.values();
         for (Type type: types) {
