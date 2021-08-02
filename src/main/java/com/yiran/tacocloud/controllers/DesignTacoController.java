@@ -52,8 +52,6 @@ public class DesignTacoController {
             model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
         }
 
-        model.addAttribute("design", new Taco());
-
         return "design";
     }
 
@@ -72,7 +70,7 @@ public class DesignTacoController {
         }
         // Save taco design, will be done in chapter 3
         Taco saved = tacoRepository.save(design);
-        // order.addDesign(saved);
+        order.addDesign(saved);
         log.info("Processing design: " + design);
 
         return "redirect:/orders/current";

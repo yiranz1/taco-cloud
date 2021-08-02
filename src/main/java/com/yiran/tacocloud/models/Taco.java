@@ -17,6 +17,9 @@ public class Taco {
     @Size(min=5, message="Name must be at least 5 characters long")
     private String name;
 
+    /**
+     * design.html表单赋值的是Ingredient.id，是String类型，和Ingredient不匹配，会存在convert错误，因此这里改为List<String>
+     */
     @Size(min=1, message="You must choose at least 1 ingredient")
     private List<String> ingredients;
 }

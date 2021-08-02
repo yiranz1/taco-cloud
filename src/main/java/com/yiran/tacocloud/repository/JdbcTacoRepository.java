@@ -26,7 +26,7 @@ public class JdbcTacoRepository implements TacoRepository {
     public Taco save(Taco taco) {
         long tacoId = saveTacoInfo(taco);
         taco.setId(tacoId);
-        for (Ingredient ingredient: taco.getIngredients()) {
+        for (String ingredient: taco.getIngredients()) {
             saveIngredientToTaco(ingredient, tacoId);
         }
 
@@ -44,9 +44,9 @@ public class JdbcTacoRepository implements TacoRepository {
         return keyHolder.getKey().longValue();
     }
 
-    private void saveIngredientToTaco(Ingredient ingredient, long tacoId) {
+    private void saveIngredientToTaco(String ingredient, long tacoId) {
         jdbc.update(
                 "INSERT INTO Tact_Ingredients (taco, ingredient) " +
-                        "VALUES (? , ?)", tacoId, ingredient.getId());
+                        "VALUES (? , ?)", tacoId, ingredient);
     }
 }
