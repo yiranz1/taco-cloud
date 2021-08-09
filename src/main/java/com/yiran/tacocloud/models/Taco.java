@@ -2,13 +2,17 @@ package com.yiran.tacocloud.models;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Entity
 public class Taco {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Date createdAt;
@@ -20,6 +24,12 @@ public class Taco {
     /**
      * design.html表单赋值的是Ingredient.id，是String类型，和Ingredient不匹配，会存在convert错误，因此这里改为List<String>
      */
+    @ManyToMany(targetEntity = Ingredient.class)
     @Size(min=1, message="You must choose at least 1 ingredient")
     private List<String> ingredients;
+
+    @PrePersist
+    void createdAt() {
+        this.createdAt = new Date();
+    }
 }
