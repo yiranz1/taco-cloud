@@ -1,25 +1,26 @@
 package com.yiran.tacocloud.repository;
 
-import com.yiran.tacocloud.models.Ingredient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yiran.tacocloud.models.Taco;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 @Repository
 public class JdbcTacoRepository implements TacoRepository {
-    private JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
+    private final ObjectMapper objectMapper;
+    private final SimpleJdbcInsert tacoInserter;
 
     public JdbcTacoRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
+        this.objectMapper = new ObjectMapper();
+        this.tacoInserter = new SimpleJdbcInsert(jdbc)
+                .withTableName("Taco")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -34,19 +35,14 @@ public class JdbcTacoRepository implements TacoRepository {
     }
     private long saveTacoInfo(Taco taco) {
         taco.setCreatedAt(new Date());
-        PreparedStatementCreator psc = new PreparedStatementCreatorFactory(
-                "INSERT INTO Taco (name, createdAt) VALUES (?, ?)",
-                Types.VARCHAR, Types.TIMESTAMP
-        ).newPreparedStatementCreator(Arrays.asList(taco.getName(), new Timestamp(taco.getCreatedAt().getTime())));
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update(psc, keyHolder);
-
-        return keyHolder.getKey().longValue();
+        Map<String, Object> values = objectMapper.convertValue(taco, Map.class);
+        values.put("createdAt", taco.getCreatedAt());
+        return tacoInserter.executeAndReturnKey(values).longValue();
     }
 
     private void saveIngredientToTaco(String ingredient, long tacoId) {
         jdbc.update(
-                "INSERT INTO Tact_Ingredients (taco, ingredient) " +
+                "INSERT INTO Taco_Ingredients (taco, ingredient) " +
                         "VALUES (? , ?)", tacoId, ingredient);
     }
 }

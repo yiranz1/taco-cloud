@@ -13,13 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.Map;
-
 @Repository
 public class JdbcOrderRepository implements OrderRepository {
-    private SimpleJdbcInsert orderInserter;
-    private SimpleJdbcInsert orderTacoInserter;
-    private ObjectMapper objectMapper;
+    private final SimpleJdbcInsert orderInserter;
+    private final SimpleJdbcInsert orderTacoInserter;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public JdbcOrderRepository(JdbcTemplate jdbc) {
