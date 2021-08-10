@@ -22,11 +22,11 @@ public class Taco {
     private String name;
 
     /**
-     * design.html表单赋值的是Ingredient.id，是String类型，和Ingredient不匹配，会存在convert错误，因此这里改为List<String>
+     * 用JPA, then no need to use List<String>
      */
     @ManyToMany(targetEntity = Ingredient.class)
     @Size(min=1, message="You must choose at least 1 ingredient")
-    private List<String> ingredients;
+    private List<Ingredient> ingredients;
 
     @PrePersist
     void createdAt() {
