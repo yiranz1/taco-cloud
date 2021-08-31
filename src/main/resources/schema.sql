@@ -35,6 +35,18 @@ create table if not exists Taco_Order (
     created_at timestamp not null
 );
 
+create table if not exists User (
+    city varchar(50) not null,
+    fullname varchar(50) not null,
+    password varchar not null,
+    phone_number varchar(50) not null,
+    state varchar(2) not null,
+    street varchar(50) not null,
+    username varchar(50) not null,
+    zip varchar(10) not null,
+    id identity
+);
+
 create table if not exists Taco_Order_Tacos (
     order_id bigint not null,
     taco_id bigint not null
